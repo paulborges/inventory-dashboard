@@ -5,11 +5,6 @@ from flask_cors import CORS
 from app.database import db, init_db
 
 
-auth_bp = Blueprint('auth',__name__)
-categories_bp = Blueprint('categories',__name__)
-products_bp = Blueprint('products',__name__)
-sales_bp = Blueprint('sales',__name__)
-
 def create_app():
     """CREATE and CONFIGURE THE FLASK APP"""
 
@@ -20,7 +15,7 @@ def create_app():
     init_db(app)
 
     CORS(app)
-
+    from app.routes import auth_bp,products_bp,categories_bp,sales_bp
     app.register_blueprint(auth_bp,url_prefix = '/api/auth')
     app.register_blueprint(categories_bp,url_prefix = '/api/categories')
     app.register_blueprint(products_bp,url_prefix = '/api/products')

@@ -38,45 +38,42 @@ class User(db.Model):
 class Category(db.Model):
     __tablename__ = 'Categories'
 
-    id = db.Column(db.Integer, primary_key= True)
-    name = db.Column(db.String(100), unique = True, nullable= True) 
+    id = db.Column(db.Integer, primary_key = True)
+    name = db.Column(db.String(100), unique = True, nullable= False) 
     description = db.Column(db.String(300), nullable= True)
 
     def to_dict(self):
         return{
-            'id': self.id,
+            'id':self.id,
             'name': self.name,
             'description': self.description
         }
 
 class Product(db.Model):
-    __tablename__ = 'Product'
+    __tablename__ = 'Products'
     
     id = db.Column(db.Integer, primary_key= True)
     category_id = db.Column(db.Integer, db.ForeignKey('Categories.id'), nullable=False, index= True)
     name = db.Column(db.String(100), unique = True, nullable= False)
     description = db.Column(db.String(300), nullable= True)
-    price = db.Column(db.Integer, nullable= False)
-    stock = db.Column(db.Integer, nullable = False)
-    quantity = db.Column(db.Integer, nullable = False)
+    price = db.Column(db.Float, nullable= False)
+    stock_quantity = db.Column(db.Integer, nullable = False)
     low_stock_threshold = db.Column(db.Integer, nullable= True)
-    sku = db.Column(db.Integer, unique = True)
+    sku = db.Column(db.String(100), unique = True)
     created_at = db.Column(db.DateTime,default=datetime.utcnow)
     
-    def is_low_stock():
-        if stock <= low_stock_threshold:
-            return True
+    def is_low_stock(self):
+        return self.stock_quantity<=self.low_stock_threshold
     
 
     def to_dict(self):
         return{
             'id': self.id,
-            'category_id': self.category_id.to_dict(),
+            'category_id': self.category_id,
             'name': self.name,
             'description': self.description,
             'price': self.price,
-            'stock': self.stock,
-            'quantity': self.quantity,
+            'stock_quantity': self.stock_quantity,
             'low_stock_threshold': self.low_stock_threshold,
             'low_stock': self.is_low_stock(),
             'sku':self.sku,
@@ -87,7 +84,7 @@ class Sale(db.Model):
     __tablename__ = 'Sales'
 
     id = db.Column(db.Integer, primary_key= True)
-    product_id = db.Column(db.Integer, db.ForeignKey('Product.id'), nullable=False, index= True)
+    product_id = db.Column(db.Integer, db.ForeignKey('Products.id'), nullable=False, index= True)
     user_id = db.Column(db.Integer, db.ForeignKey('Users.id'), nullable=False, index= True)
     quantity =db.Column(db.Integer, nullable = False)
     unit_price = db.Column(db.Integer, nullable = False)
