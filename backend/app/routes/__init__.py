@@ -8,3 +8,4 @@ sales_bp = Blueprint('sales',__name__)
 from app.routes.auth import *
 from app.routes.products import *
 from app.routes.categories import *
+from app.routes.sales import *

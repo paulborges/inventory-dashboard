@@ -23,8 +23,6 @@ def register():
 
         db.session.add(user)
         db.session.commit()
-        
-        print("User:",user)
 
         return jsonify({
             'message':'User Registered Successfully',
@@ -66,7 +64,6 @@ def login():
 def get_me(current_user):
     """GET CURRENT USER"""
     try:
-        print('current_user',current_user)
         return jsonify({'current_user':current_user.id}),200
     except Exception as e:
         return jsonify({'error': str(e)}),500

@@ -48,4 +48,25 @@ def create_categories(current_user):
 
 
     except Exception as e:
+        db.session.rollback()
         return jsonify({'error':str(e)}),500
+
+
+@categories_bp.route('/<int:id>',methods=['DELETE'])
+@admin_required
+def delete_categories(current_user):
+    """DELETE A CATEGORY"""
+    try:
+        category=Category.query.filter(id=id).first()
+        
+        if not category:
+            return jsonify({'error':'Category not found'}),404
+        
+        db.session.delete(category)
+        db.session.commit()
+
+        return jsonify({'message':'Category Deleted successfully',}),200
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}),500

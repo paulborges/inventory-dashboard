@@ -3,8 +3,7 @@ from datetime import datetime
 from app.routes import products_bp
 from app.database import db
 from app.models import Product,Category
-from app.auth import token_required
-from app.auth import admin_required
+from app.auth import token_required, admin_required
 
 @products_bp.route('',methods=['GET'])
 @token_required
@@ -48,7 +47,7 @@ def create_product(current_user):
     """CREATE NEW PRODUCT INFORMATION"""
     try:
         data= request.get_json()
-        print("data:",data)
+        
         if not data or not data.get('category_id') or not data.get('product_name') or not data.get('product_price') or not data.get('product_quantity') or not data.get('product_sku'):
             return jsonify({'error':'Missing information'}),400
 
@@ -78,7 +77,7 @@ def create_product(current_user):
             'product':product.to_dict()
             }),201
     except Exception as e:
-        db.session.rollback
+        db.session.rollback()
         return jsonify({'error':str(e)}),500
 
 @products_bp.route('/<int:id>',methods=['PUT'])
@@ -109,9 +108,6 @@ def put_product(current_user,id):
         if 'price' in data:
             product.description=data['product_price']
         
-        if 'stock' in data:
-            product.description=data['product_stock']
-        
         if 'quantity' in data:
             product.description=data['product_quantity']
 
@@ -129,11 +125,11 @@ def put_product(current_user,id):
             'products': product.to_dict()
         }),200
     except Exception as e:
-        db.session.rollback
+        db.session.rollback()
         return jsonify({'error':str(e)}),500
  
 
-@products_bp.route('/<id>',methods=['DELETE'])
+@products_bp.route('/<int:id>',methods=['DELETE'])
 @admin_required
 
 def delete_product(current_user,id):
@@ -150,5 +146,5 @@ def delete_product(current_user,id):
         return jsonify({'message':'Product deleted'}),200
 
     except Exception as e:
-        db.session.rollback
+        db.session.rollback()
         return jsonify({'error': str(e)}),500
