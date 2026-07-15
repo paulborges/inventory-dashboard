@@ -47,7 +47,6 @@ def token_required(f):
             return jsonify({'error':'Token provided is invalid or missing'}), 401
         
         user = User.query.get(user_id)
-        print("USER:",user)
 
         if not user:
             return jsonify({'error': 'User Not Found'}),401

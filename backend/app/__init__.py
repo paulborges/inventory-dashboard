@@ -15,11 +15,11 @@ def create_app():
     init_db(app)
 
     CORS(app)
-    from app.routes import auth_bp,products_bp,categories_bp,sales_bp
+    from app.routes import auth_bp,products_bp,categories_bp,sales_bp,dashboard_bp
     app.register_blueprint(auth_bp,url_prefix = '/api/auth')
     app.register_blueprint(categories_bp,url_prefix = '/api/categories')
     app.register_blueprint(products_bp,url_prefix = '/api/products')
     app.register_blueprint(sales_bp,url_prefix = '/api/sales')
-
+    app.register_blueprint(dashboard_bp,url_prefix = '/api/dashboard')
     return app
 
